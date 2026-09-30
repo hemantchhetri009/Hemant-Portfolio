@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Under Construction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f0e9dc;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ─── SKY ─── */
+    .sky {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(to bottom, #c9dff0 0%, #e8d9c0 70%, #d4c4a0 100%);
+      z-index: 0;
+    }
+
+    /* Sun */
+    .sun {
+      position: fixed;
+      top: 40px; right: 80px;
+      width: 56px; height: 56px;
+      background: #f9c74f;
+      border-radius: 50%;
+      box-shadow: 0 0 0 10px rgba(249,199,79,.2), 0 0 0 20px rgba(249,199,79,.1);
+      z-index: 1;
+      animation: sunBob 6s ease-in-out infinite;
+    }
+    @keyframes sunBob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    /* Clouds */
+    .cloud {
+      position: fixed; z-index: 1;
+      background: #fff;
+      border-radius: 50px;
+      opacity: .85;
+      animation: cloudDrift linear infinite;
+    }
+    .cloud::before, .cloud::after {
+      content: ''; position: absolute;
+      background: #fff; border-radius: 50%;
+    }
+    .c1 { width:120px; height:36px; top:60px; left:-140px; animation-duration:28s; animation-delay:0s; }
+    .c1::before { width:56px; height:56px; top:-28px; left:18px; }
+    .c1::after  { width:40px; height:40px; top:-20px; left:60px; }
+    .c2 { width:90px;  height:28px; top:90px; left:-110px; animation-duration:38s; animation-delay:-12s; opacity:.6;}
+    .c2::before { width:40px; height:40px; top:-22px; left:12px; }
+    .c2::after  { width:30px; height:30px; top:-14px; left:44px; }
+    @keyframes cloudDrift {
+      from { transform: translateX(-200px); }
+      to   { transform: translateX(110vw); }
+    }
+
+    /* ─── SCENE CONTAINER ─── */
+    .scene {
+      position: relative; z-index: 2;
+      width: min(700px, 96vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ─── TEXT ABOVE ─── */
+    .headline {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .headline h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.6rem,9vw,4.8rem);
+      letter-spacing: .08em;
+      color: #2b2118;
+      line-height: 1;
+    }
+    .headline p {
+      font-size: .9rem;
+      font-weight: 300;
+      color: #7a6652;
+      letter-spacing: .04em;
+      margin-top: 6px;
+    }
+
+    /* ─── CONSTRUCTION GROUND ─── */
+    .ground-wrap {
+      width: 100%;
+      position: relative;
+    }
+
+    /* SVG scene */
+    .construction-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ─── PROGRESS BAR ─── */
+    .progress-section {
+      width: 100%;
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(0,0,0,.1);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e76f1f, #f4a261);
+      border-radius: 100px;
+      animation: progMove 4s ease-in-out infinite alternate;
+    }
+    @keyframes progMove {
+      from { width: 48%; }
+      to   { width: 74%; }
+    }
+    .progress-pct {
+      font-size: .8rem;
+      font-weight: 600;
+      color: #2b2118;
+      min-width: 36px;
+      animation: pctTick 4s ease-in-out infinite alternate;
+    }
+    @keyframes pctTick {
+      from { opacity: 1; }
+      50%  { opacity: .5; }
+      to   { opacity: 1; }
+    }
+
+    /* ─── CONTACT ─── */
+    .contact-row {
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .85rem;
+      color: #7a6652;
+    }
+    .contact-row a {
+      color: #c05a00;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(192,90,0,.3);
+      transition: border-color .2s;
+    }
+    .contact-row a:hover { border-color: #c05a00; }
+
+    /* ══════════════════════════════════
+       SVG ANIMATIONS
+    ══════════════════════════════════ */
+
+    /* Worker 1 — Hammering */
+    #hammer-arm { transform-origin: 220px 178px; animation: hammerSwing .55s ease-in-out infinite alternate; }
+    @keyframes hammerSwing {
+      from { transform: rotate(-38deg); }
+      to   { transform: rotate(22deg); }
+    }
+
+    /* Worker 2 — Walking with bricks */
+    #walker { animation: walkAcross 6s linear infinite; }
+    @keyframes walkAcross {
+      0%   { transform: translateX(0px); }
+      45%  { transform: translateX(110px); }
+      55%  { transform: translateX(110px); }
+      100% { transform: translateX(0px); }
+    }
+    #walk-leg-l { transform-origin: 390px 242px; animation: legL .42s ease-in-out infinite alternate; }
+    #walk-leg-r { transform-origin: 398px 242px; animation: legR .42s ease-in-out infinite alternate; }
+    @keyframes legL { from { transform: rotate(18deg); } to { transform: rotate(-18deg); } }
+    @keyframes legR { from { transform: rotate(-18deg); } to { transform: rotate(18deg); } }
+    #walk-arm   { transform-origin: 389px 218px; animation: walkArm .42s ease-in-out infinite alternate; }
+    @keyframes walkArm { from { transform: rotate(-20deg); } to { transform: rotate(20deg); } }
+
+    /* Worker 3 — Digging */
+    #digger-arm { transform-origin: 530px 185px; animation: digArm .6s ease-in-out infinite alternate; }
+    @keyframes digArm {
+      from { transform: rotate(-30deg); }
+      to   { transform: rotate(35deg); }
+    }
+    #shovel     { transform-origin: 530px 185px; animation: digArm .6s ease-in-out infinite alternate; }
+    #dirt-1 { animation: dirtFly1 .6s ease-in-out infinite alternate; }
+    #dirt-2 { animation: dirtFly2 .6s ease-in-out infinite alternate; }
+    @keyframes dirtFly1 {
+      from { transform: translate(0,0) scale(0); opacity:0; }
+      to   { transform: translate(-12px,-18px) scale(1); opacity:1; }
+    }
+    @keyframes dirtFly2 {
+      from { transform: translate(0,0) scale(0); opacity:0; }
+      to   { transform: translate(-20px,-10px) scale(1); opacity:.7; }
+    }
+
+    /* Building bricks appearing */
+    #brick-row-3 { animation: brickAppear 2.4s ease-in-out infinite; }
+    @keyframes brickAppear {
+      0%,40% { opacity:0; transform:translateY(6px); }
+      60%,100%{ opacity:1; transform:translateY(0); }
+    }
+
+    /* Crane hook swinging */
+    #crane-hook { transform-origin: 162px 68px; animation: hookSwing 3s ease-in-out infinite alternate; }
+    @keyframes hookSwing {
+      from { transform: rotate(-8deg); }
+      to   { transform: rotate(8deg); }
+    }
+    #crane-load { transform-origin: 162px 68px; animation: hookSwing 3s ease-in-out infinite alternate; }
+
+    /* Scaffold worker — painting */
+    #paint-arm  { transform-origin: 292px 132px; animation: paintBrush .9s ease-in-out infinite alternate; }
+    @keyframes paintBrush {
+      from { transform: rotate(-15deg) translateX(0); }
+      to   { transform: rotate(10deg) translateX(8px); }
+    }
+
+    /* Caution tape wave */
+    #tape-wave  { animation: tapeWave 2s ease-in-out infinite alternate; }
+    @keyframes tapeWave {
+      from { d: path("M60,288 Q100,282 140,288 Q180,294 220,288 Q260,282 300,288 Q340,294 380,288 Q420,282 460,288 Q500,294 540,288 Q580,282 620,288"); }
+      to   { d: path("M60,288 Q100,294 140,288 Q180,282 220,288 Q260,294 300,288 Q340,282 380,288 Q420,294 460,288 Q500,282 540,288 Q580,294 620,288"); }
+    }
+
+    /* Smoke puffs from cement mixer */
+    #puff1 { animation: puffUp 1.8s ease-out infinite; }
+    #puff2 { animation: puffUp 1.8s ease-out infinite .6s; }
+    #puff3 { animation: puffUp 1.8s ease-out infinite 1.2s; }
+    @keyframes puffUp {
+      0%   { transform:translate(0,0) scale(.4); opacity:.7; }
+      100% { transform:translate(-8px,-28px) scale(1.4); opacity:0; }
+    }
+
+    /* Mixer drum spin */
+    #mixer-drum { transform-origin: 84px 248px; animation: drumSpin 1.2s linear infinite; }
+    @keyframes drumSpin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="sky"></div>
+  <div class="sun"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+
+  <div class="scene">
+    <!-- Headline -->
+    <div class="headline">
+      <h1>Under Construction</h1>
+      <p>We're working hard — just like these guys.</p>
+    </div>
+
+    <!-- ═══════════════ SVG SCENE ═══════════════ -->
+    <div class="ground-wrap">
+    <svg class="construction-svg" viewBox="0 50 680 270" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="brick" x="0" y="0" width="28" height="14" patternUnits="userSpaceOnUse">
+          <rect width="28" height="14" fill="#c0673a"/>
+          <rect x="1" y="1" width="26" height="12" fill="#d4724a" rx="1"/>
+          <line x1="0" y1="7" x2="28" y2="7" stroke="#a85030" stroke-width=".5"/>
+        </pattern>
+        <pattern id="brick2" x="14" y="0" width="28" height="14" patternUnits="userSpaceOnUse">
+          <rect width="28" height="14" fill="#c0673a"/>
+          <rect x="1" y="1" width="26" height="12" fill="#d4724a" rx="1"/>
+          <line x1="0" y1="7" x2="28" y2="7" stroke="#a85030" stroke-width=".5"/>
+        </pattern>
+      </defs>
+
+      <!-- ── GROUND ── -->
+      <rect x="0" y="282" width="680" height="40" fill="#c4a97a"/>
+      <rect x="0" y="286" width="680" height="2" fill="#b89a6a"/>
+
+      <!-- dirt patches -->
+      <ellipse cx="120" cy="286" rx="40" ry="6" fill="#a8854a" opacity=".5"/>
+      <ellipse cx="540" cy="286" rx="30" ry="5" fill="#a8854a" opacity=".5"/>
+
+      <!-- ── CAUTION TAPE ── -->
+      <path id="tape-wave" d="M60,288 Q100,282 140,288 Q180,294 220,288 Q260,282 300,288 Q340,294 380,288 Q420,282 460,288 Q500,294 540,288 Q580,282 620,288" stroke="#f9c74f" stroke-width="6" fill="none" stroke-dasharray="16 10" stroke-linecap="round"/>
+      <!-- tape poles -->
+      <line x1="62"  y1="270" x2="62"  y2="295" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+      <line x1="618" y1="270" x2="618" y2="295" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+      <rect x="54"  y="265" width="16" height="8" rx="2" fill="#e63946"/>
+      <rect x="610" y="265" width="16" height="8" rx="2" fill="#e63946"/>
+
+      <!-- ── BUILDING UNDER CONSTRUCTION ── -->
+      <!-- Scaffold poles -->
+      <line x1="200" y1="80" x2="200" y2="285" stroke="#aaa" stroke-width="4"/>
+      <line x1="340" y1="80" x2="340" y2="285" stroke="#aaa" stroke-width="4"/>
+      <line x1="200" y1="100" x2="340" y2="100" stroke="#aaa" stroke-width="3"/>
+      <line x1="200" y1="145" x2="340" y2="145" stroke="#aaa" stroke-width="3"/>
+      <line x1="200" y1="190" x2="340" y2="190" stroke="#aaa" stroke-width="3"/>
+      <line x1="200" y1="235" x2="340" y2="235" stroke="#aaa" stroke-width="3"/>
+
+      <!-- Brick wall rows -->
+      <rect x="205" y="238" width="130" height="42" fill="url(#brick)"/>
+      <rect x="205" y="196" width="130" height="42" fill="url(#brick2)"/>
+      <rect x="205" y="152" width="130" height="42" fill="url(#brick)"/>
+      <!-- top row appearing -->
+      <g id="brick-row-3">
+        <rect x="205" y="108" width="130" height="42" fill="url(#brick2)"/>
+      </g>
+
+      <!-- scaffold planks -->
+      <rect x="196" y="96"  width="148" height="7" rx="2" fill="#b5853a"/>
+      <rect x="196" y="141" width="148" height="7" rx="2" fill="#b5853a"/>
+      <rect x="196" y="186" width="148" height="7" rx="2" fill="#b5853a"/>
+
+      <!-- ── SCAFFOLD WORKER (painter) ── -->
+      <!-- sits on plank at y=141 -->
+      <!-- body -->
+      <rect x="280" y="112" width="22" height="26" rx="5" fill="#e07b39"/>
+      <!-- head -->
+      <circle cx="291" cy="106" r="10" fill="#f4c49a"/>
+      <!-- hard hat -->
+      <ellipse cx="291" cy="99" rx="12" ry="4" fill="#f4d03f"/>
+      <rect x="281" y="97" width="20" height="5" rx="2" fill="#f4d03f"/>
+      <!-- paint arm -->
+      <g id="paint-arm">
+        <line x1="302" y1="122" x2="324" y2="132" stroke="#f4c49a" stroke-width="5" stroke-linecap="round"/>
+        <!-- roller -->
+        <rect x="320" y="126" width="14" height="10" rx="3" fill="#3498db"/>
+        <rect x="320" y="126" width="14" height="4"  rx="2" fill="#5dade2"/>
+        <!-- paint streak on wall -->
+        <rect x="334" y="126" width="4" height="10" rx="2" fill="rgba(52,152,219,.35)"/>
+      </g>
+      <!-- legs -->
+      <line x1="283" y1="138" x2="280" y2="148" stroke="#2c3e50" stroke-width="5" stroke-linecap="round"/>
+      <line x1="299" y1="138" x2="302" y2="148" stroke="#2c3e50" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- ── CRANE ── -->
+      <!-- mast -->
+      <rect x="148" y="58" width="12" height="228" rx="4" fill="#e8a030"/>
+      <line x1="154" y1="90" x2="168" y2="110" stroke="#e8a030" stroke-width="3"/>
+      <line x1="154" y1="120" x2="168" y2="140" stroke="#e8a030" stroke-width="3"/>
+      <line x1="154" y1="150" x2="168" y2="170" stroke="#e8a030" stroke-width="3"/>
+      <!-- boom -->
+      <rect x="60" y="56" width="100" height="10" rx="3" fill="#e8a030"/>
+      <line x1="154" y1="60" x2="100" y2="56" stroke="#e8a030" stroke-width="2"/>
+      <!-- counterweight -->
+      <rect x="58" y="60" width="20" height="14" rx="3" fill="#c07820"/>
+      <!-- hook rope + hook + load -->
+      <g id="crane-hook">
+        <line x1="100" y1="66" x2="100" y2="118" stroke="#888" stroke-width="2"/>
+        <!-- hook -->
+        <path d="M98,118 Q94,126 100,128 Q106,130 106,124" fill="none" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+      <g id="crane-load">
+        <!-- suspended brick pallet -->
+        <rect x="83" y="100" width="36" height="18" rx="3" fill="#c0673a" opacity=".9"/>
+        <line x1="83" y1="109" x2="119" y2="109" stroke="#a85030" stroke-width="1"/>
+        <line x1="101" y1="100" x2="101" y2="118" stroke="#a85030" stroke-width="1"/>
+        <!-- rope to hook -->
+        <line x1="101" y1="100" x2="100" y2="118" stroke="#888" stroke-width="1.5"/>
+      </g>
+
+      <!-- ── CEMENT MIXER ── -->
+      <!-- base frame -->
+      <rect x="60" y="240" width="56" height="44" rx="4" fill="#e07b39"/>
+      <!-- wheels -->
+      <circle cx="70"  cy="286" r="8" fill="#333"/>
+      <circle cx="70"  cy="286" r="3" fill="#777"/>
+      <circle cx="108" cy="286" r="8" fill="#333"/>
+      <circle cx="108" cy="286" r="3" fill="#777"/>
+      <!-- drum -->
+      <g id="mixer-drum">
+        <ellipse cx="84" cy="248" rx="22" ry="28" fill="#d4884a" transform="rotate(-25,84,248)"/>
+        <ellipse cx="84" cy="248" rx="12" ry="16" fill="#c07030" transform="rotate(-25,84,248)"/>
+        <line x1="84" y1="230" x2="84" y2="266" stroke="#b06028" stroke-width="2" transform="rotate(-25,84,248)"/>
+        <line x1="66"  y1="248" x2="102" y2="248" stroke="#b06028" stroke-width="2" transform="rotate(-25,84,248)"/>
+      </g>
+      <!-- spout -->
+      <line x1="100" y1="256" x2="116" y2="268" stroke="#c07030" stroke-width="5" stroke-linecap="round"/>
+      <!-- concrete drip -->
+      <ellipse cx="118" cy="270" rx="6" ry="4" fill="#bbb" opacity=".7"/>
+      <!-- smoke puffs -->
+      <circle id="puff1" cx="74" cy="228" r="6"  fill="#ccc" opacity="0"/>
+      <circle id="puff2" cx="80" cy="224" r="5"  fill="#bbb" opacity="0"/>
+      <circle id="puff3" cx="70" cy="222" r="4"  fill="#ddd" opacity="0"/>
+
+      <!-- ── WORKER 1 — HAMMERING ── -->
+      <!-- stands right of building, hitting wall -->
+      <!-- body -->
+      <rect x="346" y="228" width="22" height="30" rx="5" fill="#3498db"/>
+      <!-- head -->
+      <circle cx="357" cy="221" r="11" fill="#f4c49a"/>
+      <!-- hard hat -->
+      <ellipse cx="357" cy="213" rx="13" ry="4.5" fill="#e63946"/>
+      <rect x="345" y="211" width="24" height="6" rx="3" fill="#e63946"/>
+      <!-- hammer arm -->
+      <g id="hammer-arm">
+        <line x1="357" y1="234" x2="375" y2="220" stroke="#f4c49a" stroke-width="5" stroke-linecap="round"/>
+        <!-- hammer head -->
+        <rect x="372" y="212" width="16" height="10" rx="3" fill="#555"/>
+        <rect x="372" y="212" width="7"  height="10" rx="2" fill="#777"/>
+        <!-- handle -->
+        <line x1="380" y1="222" x2="386" y2="234" stroke="#8B5E3C" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      <!-- other arm -->
+      <line x1="346" y1="234" x2="336" y2="246" stroke="#f4c49a" stroke-width="5" stroke-linecap="round"/>
+      <!-- legs -->
+      <line x1="350" y1="258" x2="348" y2="282" stroke="#1a252f" stroke-width="6" stroke-linecap="round"/>
+      <line x1="362" y1="258" x2="364" y2="282" stroke="#1a252f" stroke-width="6" stroke-linecap="round"/>
+      <!-- boots -->
+      <rect x="342" y="278" width="12" height="7" rx="3" fill="#1a252f"/>
+      <rect x="358" y="278" width="12" height="7" rx="3" fill="#1a252f"/>
+      <!-- impact sparks -->
+      <g opacity=".8">
+        <line x1="394" y1="218" x2="400" y2="210" stroke="#f9c74f" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="396" y1="222" x2="404" y2="220" stroke="#f9c74f" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="393" y1="226" x2="400" y2="228" stroke="#f9c74f" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+
+      <!-- ── WORKER 2 — WALKING WITH BRICK STACK ── -->
+      <g id="walker">
+        <!-- body -->
+        <rect x="383" y="220" width="20" height="28" rx="5" fill="#27ae60"/>
+        <!-- head -->
+        <circle cx="393" cy="212" r="10" fill="#f4c49a"/>
+        <!-- hard hat -->
+        <ellipse cx="393" cy="205" rx="12" ry="4" fill="#f4d03f"/>
+        <rect x="382" y="203" width="22" height="5" rx="2" fill="#f4d03f"/>
+        <!-- brick stack carried on shoulder -->
+        <rect x="396" y="200" width="32" height="10" rx="2" fill="#c0673a"/>
+        <rect x="396" y="206" width="32" height="5"  rx="2" fill="#d4724a"/>
+        <line x1="396" y1="205" x2="428" y2="205" stroke="#a85030" stroke-width=".8"/>
+        <!-- carry arm -->
+        <g id="walk-arm">
+          <line x1="401" y1="225" x2="410" y2="210" stroke="#f4c49a" stroke-width="5" stroke-linecap="round"/>
+        </g>
+        <!-- other arm swing -->
+        <line x1="383" y1="225" x2="374" y2="238" stroke="#f4c49a" stroke-width="5" stroke-linecap="round"/>
+        <!-- legs -->
+        <g id="walk-leg-l">
+          <line x1="386" y1="248" x2="382" y2="278" stroke="#1a252f" stroke-width="6" stroke-linecap="round"/>
+          <rect x="376" y="274" width="12" height="7" rx="3" fill="#1a252f"/>
+        </g>
+        <g id="walk-leg-r">
+          <line x1="398" y1="248" x2="403" y2="278" stroke="#1a252f" stroke-width="6" stroke-linecap="round"/>
+          <rect x="397" y="274" width="12" height="7" rx="3" fill="#1a252f"/>
+        </g>
+      </g>
+
+      <!-- ── WORKER 3 — DIGGING ── -->
+      <!-- stands far right -->
+      <!-- body -->
+      <rect x="522" y="220" width="22" height="30" rx="5" fill="#9b59b6"/>
+      <!-- head -->
+      <circle cx="533" cy="212" r="11" fill="#f4c49a"/>
+      <!-- hard hat -->
+      <ellipse cx="533" cy="205" rx="13" ry="4.5" fill="#e8a030"/>
+      <rect x="521" y="203" width="24" height="6" rx="3" fill="#e8a030"/>
+      <!-- dig arm + shovel -->
+      <g id="digger-arm">
+        <line x1="522" y1="230" x2="506" y2="252" stroke="#f4c49a" stroke-width="5" stroke-linecap="round"/>
+        <!-- shovel handle -->
+        <line x1="506" y1="250" x2="498" y2="278" stroke="#8B5E3C" stroke-width="4" stroke-linecap="round"/>
+        <!-- shovel blade -->
+        <path d="M492,274 L504,282 L510,270 Z" fill="#7f8c8d"/>
+        <path d="M492,274 L504,282 L508,276 Z" fill="#95a5a6"/>
+      </g>
+      <!-- other arm -->
+      <line x1="544" y1="230" x2="554" y2="244" stroke="#f4c49a" stroke-width="5" stroke-linecap="round"/>
+      <!-- legs -->
+      <line x1="526" y1="250" x2="524" y2="280" stroke="#1a252f" stroke-width="6" stroke-linecap="round"/>
+      <line x1="538" y1="250" x2="540" y2="280" stroke="#1a252f" stroke-width="6" stroke-linecap="round"/>
+      <!-- boots -->
+      <rect x="518" y="276" width="12" height="7" rx="3" fill="#1a252f"/>
+      <rect x="534" y="276" width="12" height="7" rx="3" fill="#1a252f"/>
+      <!-- dirt flying -->
+      <circle id="dirt-1" cx="488" cy="268" r="4" fill="#a8854a"/>
+      <circle id="dirt-2" cx="480" cy="272" r="3" fill="#a8854a"/>
+
+      <!-- hole in ground -->
+      <ellipse cx="504" cy="284" rx="18" ry="5" fill="#8a6a3a"/>
+
+      <!-- ── TRAFFIC CONES ── -->
+      <!-- cone 1 -->
+      <polygon points="455,284 448,265 462,265" fill="#e76f1f"/>
+      <rect x="445" y="280" width="22" height="5" rx="1" fill="#e76f1f" opacity=".7"/>
+      <line x1="449" y1="274" x2="461" y2="274" stroke="#fff" stroke-width="2" opacity=".7"/>
+      <line x1="448" y1="269" x2="462" y2="269" stroke="#fff" stroke-width="1.5" opacity=".5"/>
+      <!-- cone 2 -->
+      <polygon points="478,284 472,268 486,268" fill="#e76f1f"/>
+      <rect x="469" y="280" width="20" height="5" rx="1" fill="#e76f1f" opacity=".7"/>
+      <line x1="473" y1="277" x2="483" y2="277" stroke="#fff" stroke-width="2" opacity=".7"/>
+
+      <!-- ── SIGN BOARD ── -->
+      <rect x="575" y="200" width="80" height="50" rx="6" fill="#f4d03f"/>
+      <rect x="578" y="203" width="74" height="44" rx="4" fill="#f9e14b"/>
+      <!-- exclamation mark -->
+      <text x="615" y="236" text-anchor="middle" font-size="28" font-weight="900" fill="#e8a030" font-family="Arial">!</text>
+      <!-- sign post -->
+      <line x1="615" y1="250" x2="615" y2="285" stroke="#888" stroke-width="4" stroke-linecap="round"/>
+      <!-- "CAUTION" text on sign -->
+      <text x="615" y="215" text-anchor="middle" font-size="8" font-weight="700" fill="#c07820" font-family="Arial" letter-spacing="1">CAUTION</text>
+
+    </svg>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-section">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c05a00" stroke-width="2.5" stroke-linecap="round"><path d="M2 20h20M6 20V10l6-6 6 6v10"/></svg>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
+      </div>
+      <span class="progress-pct">68%</span>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-row">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c05a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+      Questions? Contact the admin:
+      <a href="mailto:dev.hemantchhetri@gmail.com">dev.hemantchhetri@gmail.com</a>
+    </div>
+  </div>
+
+</body>
+</html>
