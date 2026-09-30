@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /writer.html
+
+Sitemap: https://www.hemantchhetri.com.np/sitemap.xml
